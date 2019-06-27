@@ -500,15 +500,31 @@ export default class PatientViewPage extends React.Component<IPatientViewPagePro
                             <IFrameLoader height={700} url={  `http://cancer.digitalslidearchive.net/index_mskcc.php?slide_name=${patientViewPageStore.patientId}` } />
                         </div>
                     </MSKTab>
-                        
+
                     <MSKTab key={6} id="pathologySlides" linkText="Pathology Slides" label="PROTOTYPE">
                         <div style={{position: "relative"}}>
-                            <iframe style={{ width:'100%', position:'relative', height:700, border:'none'}} src={patientViewPageStore.getPathologySlideURL.result}></iframe>
+                            <iframe className="fullWidthExternal" src={patientViewPageStore.getPathologySlideURL.result}>
+                            no iframe support
+                            </iframe>
                         </div>
                     </MSKTab>
 
+                    <MSKTab key={7} id="fmiReportSlides" linkText="FMI Report" label="PROTOTYPE">
+                        {
+                            patientViewPageStore.getSampleFMIReports.result.map(sample =>
+                                <div style={{position: "relative"}}>
+                                    <h3>Sample {sample.sampleId}</h3>
+                                    <object className="fullWidthExternal" data={sample.fmiReport} type="application/pdf">
+                                        <iframe className="fullWidthExternal" src={sample.fmiReport}>
+                                            no iframe support
+                                        </iframe>
+                                    </object>
+                                </div>
+                            )
+                        }
+                    </MSKTab>
 
-                    <MSKTab key={7} id="timelineDataTab1" linkText="Lab tests (Fast drug screening)" label="PROTOTYPE">
+                    <MSKTab key={8} id="timelineDataTab1" linkText="Lab tests (Fast drug screening)" label="PROTOTYPE">
 
                         <div className="clearfix">
                             <FeatureTitle title="Lab tests (Fast drug screening)"

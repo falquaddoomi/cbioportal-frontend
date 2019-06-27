@@ -30,14 +30,38 @@ import CancerTypeCache from "shared/cache/CancerTypeCache";
 import MutationCountCache from "shared/cache/MutationCountCache";
 import AppConfig from "appConfig";
 import {
-    findMolecularProfileIdDiscrete, ONCOKB_DEFAULT, fetchOncoKbData,
-    fetchCnaOncoKbData, mergeMutations, fetchMyCancerGenomeData, fetchCosmicData,
-    fetchMutationData, fetchDiscreteCNAData, generateUniqueSampleKeyToTumorTypeMap, findMutationMolecularProfileId,
-    findUncalledMutationMolecularProfileId, mergeMutationsIncludingUncalled, fetchGisticData, fetchCopyNumberData,
-    fetchMutSigData, findMrnaRankMolecularProfileId, mergeDiscreteCNAData, fetchSamplesForPatient, fetchClinicalData,
-    fetchCopyNumberSegments, fetchClinicalDataForPatient, makeStudyToCancerTypeMap,
-    fetchCivicGenes, fetchCnaCivicGenes, fetchCivicVariants, groupBySampleId, findSamplesWithoutCancerTypeClinicalData,
-    fetchStudiesForSamplesWithoutCancerTypeClinicalData, fetchOncoKbAnnotatedGenesSuppressErrors, concatMutationData
+    findMolecularProfileIdDiscrete,
+    ONCOKB_DEFAULT,
+    fetchOncoKbData,
+    fetchCnaOncoKbData,
+    mergeMutations,
+    fetchMyCancerGenomeData,
+    fetchCosmicData,
+    fetchMutationData,
+    fetchDiscreteCNAData,
+    generateUniqueSampleKeyToTumorTypeMap,
+    findMutationMolecularProfileId,
+    findUncalledMutationMolecularProfileId,
+    mergeMutationsIncludingUncalled,
+    fetchGisticData,
+    fetchCopyNumberData,
+    fetchMutSigData,
+    findMrnaRankMolecularProfileId,
+    mergeDiscreteCNAData,
+    fetchSamplesForPatient,
+    fetchClinicalData,
+    fetchCopyNumberSegments,
+    fetchClinicalDataForPatient,
+    makeStudyToCancerTypeMap,
+    fetchCivicGenes,
+    fetchCnaCivicGenes,
+    fetchCivicVariants,
+    groupBySampleId,
+    findSamplesWithoutCancerTypeClinicalData,
+    fetchStudiesForSamplesWithoutCancerTypeClinicalData,
+    fetchOncoKbAnnotatedGenesSuppressErrors,
+    concatMutationData,
+    fetchClinicalDataForSample
 } from "shared/lib/StoreUtils";
 import {indexHotspotsData, fetchHotspotsData} from "shared/lib/CancerHotspotsUtils";
 import {stringListToSet} from "../../../shared/lib/StringUtils";
@@ -189,7 +213,7 @@ export class PatientViewPageStore {
         invoke: async() => fetchClinicalDataForPatient(this.studyId, this.patientId),
         default: []
     });
-    
+
     readonly getPathologySlideURL = remoteData<string>({
         await: () => [this.clinicalDataPatient],
         invoke: async() => {
@@ -202,6 +226,27 @@ export class PatientViewPageStore {
         },
         default: ''
     });
+
+    readonly getSampleFMIReports = remoteData({
+       await: () => [this.samples],
+       invoke: async () => {
+           const promises = this.samples.result.map(async sample => {
+               return fetchClinicalDataForSample(this.studyId, sample.sampleId)
+           });
+
+           return Promise.all(promises).then((samples) => {
+               return samples.map(sample => {
+                   // for some reason each sample is wrapped in an array, hence the first [0].
+                   // for the sample ID, the first attribute in that array is [0][0], and each have
+                   // sampleId in them, so we get it from there.
+                   return {
+                       sampleId: sample[0][0].sampleId,
+                       fmiReport: sample[0].filter(attr => attr.clinicalAttributeId === 'FMI_REPORT_URL')[0].value
+                   };
+               });
+           });
+       }
+   }, []);
 
     readonly samples = remoteData(
         async() => fetchSamplesForPatient(this.studyId, this._patientId, this.sampleId),
@@ -257,7 +302,7 @@ export class PatientViewPageStore {
                             return getPathologyReport(patientId, i+1);
                         }, () => reports);
                 }
-                
+
                return getPathologyReport(this.patientId, 0);
             } else {
                 return [];
