@@ -299,6 +299,19 @@ export async function fetchSamples(sampleIds:MobxPromise<string[]>,
     }
 }
 
+export async function fetchClinicalDataForSample(studyId:string,
+                                             sampleId?:string,
+                                             client:CBioPortalAPI = defaultClient)
+{
+    if (studyId && sampleId)
+    {
+        return await client.getAllClinicalDataOfSampleInStudyUsingGET({studyId, sampleId}).then((data) => [data]);
+    }
+    else {
+        return [];
+    }
+}
+
 export async function fetchGermlineConsentedSamples(studyIds: MobxPromise<string[]>,
                                                     studiesWithGermlineConsentedSamples?: string[],
                                                     client: CBioPortalAPI = defaultClient)
@@ -645,7 +658,7 @@ export async function fetchCivicGenes(mutationData?:MobxPromise<Mutation[]>,
     mutationDataResult.forEach(function(mutation: Mutation) {
         queryHugoSymbols.add(mutation.gene.hugoGeneSymbol);
     });
-    
+
     let querySymbols: Array<string> = Array.from(queryHugoSymbols);
 
     let civicGenes: ICivicGene = await getCivicGenes(querySymbols);
@@ -657,15 +670,15 @@ export async function fetchCnaCivicGenes(discreteCNAData:MobxPromise<DiscreteCop
 {
     if (discreteCNAData.result && discreteCNAData.result.length > 0) {
         let queryHugoSymbols: Set<string> = new Set([]);
-        
+
         discreteCNAData.result.forEach(function(cna: DiscreteCopyNumberData) {
             queryHugoSymbols.add(cna.gene.hugoGeneSymbol);
         });
-        
+
         let querySymbols: Array<string> = Array.from(queryHugoSymbols);
-    
+
         let civicGenes: ICivicGene = (await getCivicGenes(querySymbols));
-    
+
         return civicGenes;
     } else {
         return {};
