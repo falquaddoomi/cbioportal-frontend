@@ -340,7 +340,7 @@ export default class PatientViewPage extends React.Component<IPatientViewPagePro
                             {
                                 (!!sampleManager && patientViewPageStore.clinicalEvents.isComplete && patientViewPageStore.clinicalEvents.result.length > 0) && (
 
-                                    <div>
+                                    <div style={{display: 'none'}}>
                                         <Timeline store={patientViewPageStore} getWidth={ ()=>$(window).width()-40 } sampleManager={ sampleManager } />
                                         <hr />
                                     </div>
@@ -484,12 +484,14 @@ export default class PatientViewPage extends React.Component<IPatientViewPagePro
                     </MSKTab>
 
 
-                    <MSKTab key={4} id="heatMapReportTab" linkText="Heatmap"
+                    { /*
+                     <MSKTab key={4} id="heatMapReportTab" linkText="Heatmap"
                              hide={(patientViewPageStore.MDAndersonHeatMapAvailable.isComplete && !patientViewPageStore.MDAndersonHeatMapAvailable.result)}
                             loading={patientViewPageStore.MDAndersonHeatMapAvailable.isPending}
                     >
                             <IFrameLoader height={700} url={ `//bioinformatics.mdanderson.org/TCGA/NGCHMPortal/?participant=${patientViewPageStore.patientId}` } />
                     </MSKTab>
+                     */ }
 
                     <MSKTab key={5} id="tissueImageTab" linkText="Tissue Image"
                             hide={/https/.test(window.location.protocol) // can't show this iframe if we're on https:
@@ -524,6 +526,7 @@ export default class PatientViewPage extends React.Component<IPatientViewPagePro
                         }
                     </MSKTab>
 
+                    { /*
                     <MSKTab key={8} id="timelineDataTab1" linkText="Lab tests (Fast drug screening)" label="PROTOTYPE">
 
                         <div className="clearfix">
@@ -536,9 +539,8 @@ export default class PatientViewPage extends React.Component<IPatientViewPagePro
                             )
                             }
                         </div>
-
-
                    </MSKTab>
+                   */ }
               </MSKTabs>
 
 
