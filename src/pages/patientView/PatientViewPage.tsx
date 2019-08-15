@@ -526,7 +526,6 @@ export default class PatientViewPage extends React.Component<IPatientViewPagePro
                         }
                     </MSKTab>
 
-                    { /*
                     <MSKTab key={8} id="timelineDataTab1" linkText="Lab tests (Fast drug screening)" label="PROTOTYPE">
 
                         <div className="clearfix">
@@ -534,13 +533,12 @@ export default class PatientViewPage extends React.Component<IPatientViewPagePro
                                           isLoading={ patientViewPageStore.clinicalEvents.isPending }
                                           className="pull-left"/>
                             { (patientViewPageStore.clinicalEvents.isComplete) && (
-                                <ClinicalInformationEventsTable showTitleBar={true}
+                                <ClinicalInformationEventsTable showTitleBar={true} heatmap={true}
                                                                  data={patientViewPageStore.clinicalEvents.result}/>
                             )
                             }
                         </div>
                    </MSKTab>
-                   */ }
               </MSKTabs>
 
 
