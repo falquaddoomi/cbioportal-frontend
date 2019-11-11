@@ -37,6 +37,7 @@ import { getMouseIcon } from './SVGIcons';
 import './patient.scss';
 import IFrameLoader from "../../shared/components/iframeLoader/IFrameLoader";
 import {getSampleViewUrl} from "../../shared/api/urls";
+import FastDrugsBarPlot from "pages/patientView/clinicalInformation/FastDrugsBarPlot";
 
 const patientViewPageStore = new PatientViewPageStore();
 
@@ -55,9 +56,13 @@ export interface IPatientViewPageProps {
     clinicalDataStatus?: RequestStatus;
 }
 
+export interface IPatientViewState {
+    heatmap: boolean;
+}
+
 @inject('routing')
 @observer
-export default class PatientViewPage extends React.Component<IPatientViewPageProps, {}> {
+export default class PatientViewPage extends React.Component<IPatientViewPageProps, IPatientViewState> {
 
     @observable private mutationTableColumnVisibility: {[columnId: string]: boolean}|undefined;
     @observable private cnaTableColumnVisibility: {[columnId: string]: boolean}|undefined;
@@ -68,6 +73,10 @@ export default class PatientViewPage extends React.Component<IPatientViewPagePro
     constructor(props: IPatientViewPageProps) {
 
         super();
+
+        this.state = {
+            heatmap: false
+        };
 
         //TODO: this should be done by a module so that it can be reused on other pages
         const reaction1 = reaction(
@@ -532,9 +541,33 @@ export default class PatientViewPage extends React.Component<IPatientViewPagePro
                             <FeatureTitle title="Lab tests (Fast drug screening)"
                                           isLoading={ patientViewPageStore.clinicalEvents.isPending }
                                           className="pull-left"/>
+                            <div className="pull-left" style={{marginLeft: '10px'}}>
+                                <label>
+                                    <input type="checkbox"
+                                        onChange={(e) => { this.setState((pstate) => ({ heatmap: !pstate.heatmap }))}}
+                                        checked={this.state.heatmap} style={{marginRight: '5px'}}
+                                    />
+                                    Use Heatmap
+                                </label>
+                            </div>
+
                             { (patientViewPageStore.clinicalEvents.isComplete) && (
-                                <ClinicalInformationEventsTable showTitleBar={true} heatmap={true}
-                                                                 data={patientViewPageStore.clinicalEvents.result}/>
+                                <If condition={this.state.heatmap}>
+                                    <Then>
+                                        <ClinicalInformationEventsTable
+                                            showTitleBar={true} heatmap={true}
+                                            data={patientViewPageStore.clinicalEvents.result}
+                                        />
+                                    </Then>
+                                    <Else>
+                                        <div style={{clear: 'both', display: 'flex', justifyContent: 'center'}}>
+                                            <FastDrugsBarPlot
+                                                showTitleBar={true}
+                                                data={patientViewPageStore.clinicalEvents.result}
+                                            />
+                                        </div>
+                                    </Else>
+                                </If>
                             )
                             }
                         </div>

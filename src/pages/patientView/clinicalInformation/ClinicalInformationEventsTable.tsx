@@ -32,7 +32,6 @@ export default class ClinicalInformationEventsTable extends React.Component<ICli
         for (i = 0; i < eventData.length; i++) {
             const row = eventData[i];
             if (row.eventType === "LAB_TEST") {
-
                 tableData.push({"columns" : row.attributes});
             }
         }
@@ -41,10 +40,13 @@ export default class ClinicalInformationEventsTable extends React.Component<ICli
     }
 
     public getScale(dataItems: IPatientEventRow[], minColor='red', maxColor='blue') {
+        console.log(dataItems);
+
         // compute the min, max of the drugs that have specified values
         const domain = dataItems
             .filter(x => x.columns.length > 1) // drugs that have screening values
             .map(x => x.columns.slice(1)) // exclude the drug label column (column 0)
+            .map(x => x.filter((c:any) => c.key !== 'isSignificant')) // exclude the 'isSignificant' column, too
             .reduce((a, x) => {
                 const rowMin = Math.min(...x.map((c:{value: Number}) => c.value));
                 const rowMax = Math.max(...x.map((c:{value: Number}) => c.value));
@@ -78,7 +80,7 @@ export default class ClinicalInformationEventsTable extends React.Component<ICli
                 showColumnVisibility={false}
                 className={[styles.patientTable, this.props.heatmap ? styles.heatmapTable : ""].join(" ")}
                 initialItemsPerPage={SHOW_ALL_PAGE_SIZE}
-                initialSortColumn={tableData[0].columns[1].key}
+                initialSortColumn={tableData && tableData[0] ? tableData[0].columns[1].key : null}
                 initialSortDirection={"desc"}
                 showFilter={(this.props.showFilter === false) ? false : true }
                 showCopyDownload={(this.props.showCopyDownload === false) ? false : true }
@@ -126,7 +128,7 @@ export default class ClinicalInformationEventsTable extends React.Component<ICli
                     sortBy: (data:IPatientEventRow)=> this.getDisplayValue(data, dataItems[0].columns[column].key)
                 });
             }
-            else {
+            else if (dataItems[0].columns[column].key !== "isSignificant") {
                 columnsAndData.push({
                     name: dataItems[0].columns[column].key,
                     render: (data:IPatientEventRow) => {
