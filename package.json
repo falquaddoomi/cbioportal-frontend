@@ -107,6 +107,7 @@
     "d3-scale": "^2.0.0",
     "datatables.net": "^1.10.13",
     "dotenv": "^4.0.0",
+    "es6-promise": "^4.2.8",
     "express": "^4.14.0",
     "extract-text-webpack-plugin": "^2.1.2",
     "file-loader": "^0.9.0",
@@ -144,7 +145,7 @@
     "oncoprintjs": "^1.1.6",
     "parameter-validator": "^1.0.2",
     "pdfobject": "^2.0.201604172",
-    "plotly.js": "^1.31.2",
+    "plotly.js": "^1.49.4",
     "postcss-loader": "^1.2.2",
     "precss": "^1.4.0",
     "progress-bar-webpack-plugin": "^1.9.3",
@@ -170,6 +171,7 @@
     "react-if": "^2.1.0",
     "react-motion": "^0.4.7",
     "react-overlays": "0.7.4",
+    "react-plotly.js": "^2.3.0",
     "react-rangeslider": "^2.1.0",
     "react-redux": "^5.0.2",
     "react-renderif": "^1.0.2",
@@ -222,6 +224,8 @@
     "word-wrap": "^1.2.3"
   },
   "devDependencies": {
+    "@types/plotly.js": "^1.44.10",
+    "@types/react-plotly.js": "^2.2.3",
     "argparse": "^1.0.9",
     "babel-plugin-istanbul": "^3.1.2",
     "babel-plugin-rewire": "^1.0.0",
