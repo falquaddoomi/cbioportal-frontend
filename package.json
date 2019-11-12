@@ -225,7 +225,7 @@
   },
   "devDependencies": {
     "@types/plotly.js": "^1.44.10",
-    "@types/react-plotly.js": "^2.2.3",
+    "@types/react-plotly.js": "^2.2.4",
     "argparse": "^1.0.9",
     "babel-plugin-istanbul": "^3.1.2",
     "babel-plugin-rewire": "^1.0.0",
