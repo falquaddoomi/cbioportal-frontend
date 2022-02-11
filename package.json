@@ -244,7 +244,7 @@
     "istanbul-instrumenter-loader": "^1.2.0",
     "jasmine-core": "^2.5.2",
     "json": "^9.0.6",
-    "karma": "^1.7.0",
+    "karma": "^6.3.14",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.1",
